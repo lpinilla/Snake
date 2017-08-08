@@ -22,7 +22,6 @@ class SnakePart{
 SnakePart * snake;
 
 class Body : public SnakePart{
-
 };
 
 class Tail : public SnakePart{
