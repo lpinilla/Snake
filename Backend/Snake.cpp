@@ -3,62 +3,86 @@
 #include "Map.h"
 #include "Snake.h"
 
-//extern pTile board; //TODO
+//extern pTile board; //TODO do it properly
+
 int baseSnakeWeight;
 int expandArraySize = 5;
 int totalSnakeWeight = 0;
 
 
-class SnakePart{
-    public:
-        int x, y;
-        SnakePart * next;
-        SnakePart(){
-            x = y = 0; //ineficiente si lo voy a pisar
-            next = NULL; //necesario?
-        }
-};
+// class SnakePart{
+//     public:
+//         int x, y;
+//         SnakePart * next;
+//         SnakePart(){
+//             x = y = 0; //ineficiente si lo voy a pisar
+//             next = NULL; //necesario?
+//         }
+// };
 
-SnakePart * snake;
+SnakePart::SnakePart(){
+    x = y = 0;
+    next = NULL;
+}
 
-class Body : public SnakePart{
-};
 
-class Tail : public SnakePart{
+SnakePart * snake; //Dinamic array of SnakePart (not *)
 
-    public:
-        void clearTileDir(){
-            //TODO needs a reference to the board
-            //board[this->x][this->y] = 0;
-        }
-};
+// class Body : public SnakePart{
+// };
 
-class Head : public SnakePart{
-    public:
-        int snakeSize;
-        Head(){
-            snakeSize = 0;
-        }
+// class Tail : public SnakePart{
+//
+//     public:
+//         void clearTileDir(){
+//             //TODO needs a reference to the board
+//             //board[this->x][this->y] = 0;
+//         }
+// };
 
-        void addBody(){
-            SnakePart aux;
-            while(this->next != NULL){ //grab the tail
-                aux = *(this->next);
-            }
-            if(snakeSize % expandArraySize == 0){ //need to expand
-                snake = (SnakePart *) realloc(snake, totalSnakeWeight + expandArraySize * sizeof(Body));
-            }
-            pushTail(aux);
-            *(snake + sizeof(Head) + (snakeSize + 1) * sizeof(Body)) = Body();
-            snakeSize++;
-        }
+void Tail::clearTileDir(){
+    ;
+}
 
-    private:
-        void pushTail(SnakePart aux){ //TODO
+// class Head : public SnakePart{
+//     public:
+//         int snakeSize;
+//         Head(){
+//             snakeSize = 0;
+//         }
+//
+//         void addBody(){
+//             SnakePart tail = (SnakePart) *this; //it works?
+//             while( tail.next != NULL){ //grab the tail
+//                 tail = *(this->next);
+//             }
+//             if(snakeSize % expandArraySize == 0){ //need to expand
+//                 snake = (SnakePart *) realloc(snake, totalSnakeWeight + expandArraySize * sizeof(Body));
+//             }
+//             //pushTail(tail);
+//             *(snake + sizeof(Head) + (snakeSize + 1) * sizeof(Body)) = Body();
+//             snakeSize++;
+//         }
+//
+//     private:
+//         void pushTail(SnakePart aux){ //TODO
+//
+//         }
+// };
 
-        }
-};
-
+Head::Head() : snakeSize(0) { }; //it works??
+void Head::addBody(){
+    SnakePart tail = (SnakePart) *this; //it works?
+    while( tail.next != NULL){ //grab the tail
+        tail = *(this->next);
+    }
+    if(snakeSize % expandArraySize == 0){ //need to expand
+        snake = (SnakePart *) realloc(snake, totalSnakeWeight + expandArraySize * sizeof(Body));
+    }
+    //pushTail(tail);
+    *(snake + sizeof(Head) + (snakeSize + 1) * sizeof(Body)) = Body();
+    snakeSize++;
+}
 
 
 
