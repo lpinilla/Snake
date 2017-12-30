@@ -23,7 +23,4 @@ void createMap(){
     }
 }
 
-void operation(int dir){
-}
-
 //int main(){} //just to compile
