@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "Map.h"
 
-#define MAPSIDE 10
 
 typedef struct tile{ //weight: 24 bits
     int x, y, dir;
@@ -18,7 +17,7 @@ void createMap(){
             board[t] = (tTile *) malloc(sizeof(tTile));
             board[t]->x = i;
             board[t]->y = j;
-            board[t]->dir = NONE;
+            board[t]->dir = 0; //HARDCODED 'NONE'
         }
     }
 }

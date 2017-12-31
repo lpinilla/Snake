@@ -1,17 +1,18 @@
 #ifndef SNAKE_H_INCLUDED
 #define SNAKE_H_INCLUDED
 
-
+enum Directions {NONE = 0, UP, DOWN, LEFT, RIGHT};
 
 class SnakePart{
     public:
         int x, y;
-        //SnakePart * next;
         SnakePart(int x, int y);
         void move();
 };
 
 extern std::vector<SnakePart *> snake;
+
+void createSnake();
 
 class Body : public SnakePart{
     public:
@@ -32,5 +33,7 @@ class Head : public SnakePart{
         void eatFood();
         void assignDirection();
 };
+
+
 
 #endif
