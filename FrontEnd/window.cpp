@@ -12,9 +12,11 @@ typedef struct color{
 void renderScene();
 void changeSize(int w, int h);
 void processNormalKeys(unsigned char key, int x, int y);
+void processSpecialKeys(int key, int x, int y);
 void drawTile(int x, int y, tColor color, float width);
 tColor createColor(float r, float g, float b);
 void randomFoodPos(int &x, int &y);
+void fpstime(int);
 //void processSpecialKeys(int key, int x, int y);
 
 tColor red, green, blue, white, nColor;
@@ -42,13 +44,12 @@ int main(int argc, char ** argv){
 	//register callback
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
-
 	//idle func registration
 	glutIdleFunc(renderScene);
 
 	//keyboard
 	glutKeyboardFunc(processNormalKeys);
-	//glutSpecialFunc(processSpecialKeys);
+	glutSpecialFunc(processSpecialKeys);
 
 	//enter glub event processing cycle	
 	glutMainLoop();
@@ -57,7 +58,10 @@ int main(int argc, char ** argv){
 }
 
 void drawBoard(){
-
+	/*nColor = createColor(1.0,1.0,0.0);
+	tColor orange = createColor(1.0,0.5,0.0);
+	tColor cyan = createColor(0.0,1.0,1.0);
+	tColor purple = createColor(1.0,0.0,1.0);*/
 	for(int i = 0; i < MAPSIDE ; i++){
 		for(int j = 0; j < MAPSIDE; j++){
 			if(i == 0 || i == MAPSIDE-1 ||
@@ -66,6 +70,18 @@ void drawBoard(){
 			}else{
 				drawTile(i,j, white, 1.0f);
 			}
+			/*if(board[i][j]->dir == UP){
+				drawTile(i,j, nColor, 1.0f);
+			}
+			if(board[i][j]->dir == RIGHT){
+				drawTile(i,j, orange, 1.0f);
+			}
+			if(board[i][j]->dir == DOWN){
+				drawTile(i,j, cyan, 1.0f);
+			}
+			if(board[i][j]->dir == LEFT){
+				drawTile(i,j, purple, 1.0f);
+			}*/
 		}
 	}
 }
@@ -105,7 +121,7 @@ void renderScene(){
 	drawBoard();
 	drawSnake();
 	drawFood();
-	move();
+	//move();
 	glutSwapBuffers();
 }
 
@@ -120,6 +136,27 @@ void changeSize(int w, int h){
 void processNormalKeys(unsigned char key, int x, int y){
 	if(key == 27){
 		exit(0);
+	}
+	if(key == 109){
+		move();
+	}
+}
+
+void processSpecialKeys(int key, int x, int y){
+	Head * h = (Head *) snake.at(0);
+	switch(key){
+		case GLUT_KEY_UP:
+			h->assignDirection(UP);
+			break;
+		case GLUT_KEY_RIGHT:
+			h->assignDirection(RIGHT);
+			break;
+		case GLUT_KEY_DOWN:
+			h->assignDirection(DOWN);
+			break;
+		case GLUT_KEY_LEFT:
+			h->assignDirection(LEFT);
+			break;
 	}
 }
 
@@ -139,3 +176,4 @@ void randomFoodPos(int &x, int &y){
   x = _min + rand() % (_maxX -_min);
   y = _min + rand() % (_maxY -_min);
 }
+
