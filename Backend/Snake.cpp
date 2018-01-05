@@ -1,14 +1,11 @@
 #include <stdio.h>
-#include <vector>
 #include <iostream>
-//#include <stdlib.h>
 #include "Map.h"
 #include "Snake.h"
 
-//extern pTile board; //TODO do it properly
-
 std::vector<SnakePart *> snake; //shnek
-Directions dir = UP; //test hardcoded
+Directions dir = NONE;
+pTile headInitPos, bodyInitPos, tailInitPos;
 
 int initialSnakeSize = 3;
 
@@ -17,15 +14,42 @@ SnakePart::SnakePart(int x1, int y1){
     y = y1;
 }
 
-
-void createSnake(){
-	snake.push_back((SnakePart *) new Head(0,2));
-	snake.push_back((SnakePart *) new Body(0,1));
-	snake.push_back((SnakePart *) new Tail(0,0));
+void preSetGame(){
+	createSnake();
+	createMap();
+	setInitialDirections();
 }
 
 
-int main(){
-    createSnake();  
-    //std::cout << dir << "\n";
-} //just to see compile errors
+void createSnake(){
+	snake.push_back((SnakePart *) new Head(2,4));
+	snake.push_back((SnakePart *) new Body(2,3));
+	snake.push_back((SnakePart *) new Tail(2,2));
+}
+
+void setInitialDirections(){
+	board[2][4]->dir = UP;
+	board[2][3]->dir = UP;
+	board[2][2]->dir = UP; //tail
+}
+
+void move(){
+	for(SnakePart * part : snake){
+		switch(board[part->x][part->y]->dir){
+			case UP:
+				part->y = part->y+1;
+				break;
+			case DOWN:
+				part->y = part->y-1;
+				break;
+			case LEFT:
+				part->x = part->x-1;
+				break;
+			case RIGHT:
+				part->x = part->x+1;
+				break;
+			case NONE:
+				break;			
+		}
+	}
+}

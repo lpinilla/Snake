@@ -1,5 +1,6 @@
 #ifndef SNAKE_H_INCLUDED
 #define SNAKE_H_INCLUDED
+#include <vector>
 
 enum Directions {NONE = 0, UP, DOWN, LEFT, RIGHT};
 
@@ -13,6 +14,10 @@ class SnakePart{
 extern std::vector<SnakePart *> snake;
 
 void createSnake();
+void setInitialDirections();
+void setInitTiles(int x1, int y1, Directions dir, pTile tile);
+void preSetGame();
+void move();
 
 class Body : public SnakePart{
     public:

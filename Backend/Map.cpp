@@ -2,22 +2,15 @@
 #include <stdlib.h>
 #include "Map.h"
 
-
-typedef struct tile{ //weight: 24 bits
-    int x, y, dir;
-}tTile;
-
-typedef tTile * pTile;
-
-pTile board[MAPSIDE * MAPSIDE];
+pTile board[MAPSIDE][MAPSIDE];
 
 void createMap(){
-    for(int i = 0, t= 0; i < MAPSIDE; i++){
-        for(int j = 0; j < MAPSIDE; j++, t++){
-            board[t] = (tTile *) malloc(sizeof(tTile));
-            board[t]->x = i;
-            board[t]->y = j;
-            board[t]->dir = 0; //HARDCODED 'NONE'
+    for(int i = 0; i < MAPSIDE; i++){
+        for(int j = 0; j < MAPSIDE; j++){
+            board[i][j] = (pTile) malloc(sizeof(tTile));
+            board[i][j]->x = i;
+            board[i][j]->y = j;
+            board[i][j]->dir = 0; //HARDCODED 'NONE'
         }
     }
 }
