@@ -5,6 +5,8 @@
 #include "../Backend/Map.h"
 #include "../Backend/Snake.h"
 
+#define FPS 10
+
 typedef struct color{
 	float r,g,b;
 }tColor;
@@ -16,12 +18,12 @@ void processSpecialKeys(int key, int x, int y);
 void drawTile(int x, int y, tColor color, float width);
 tColor createColor(float r, float g, float b);
 void randomFoodPos(int &x, int &y);
-void fpstime(int);
-//void processSpecialKeys(int key, int x, int y);
+void timer(int);
 
 tColor red, green, blue, white, nColor;
 int foodX, foodY;
 bool food = true;
+Directions lastDir = UP;
 
 void createBasicColors(){
 	red = createColor(1.0f,0.0f,0.0f);
@@ -40,13 +42,13 @@ int main(int argc, char ** argv){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Shnek");
 
-
+	glutTimerFunc(1000, timer, 0);
 	//register callback
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	//idle func registration
 	glutIdleFunc(renderScene);
-
+	
 	//keyboard
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(processSpecialKeys);
@@ -121,7 +123,7 @@ void renderScene(){
 	drawBoard();
 	drawSnake();
 	drawFood();
-	//move();
+	
 	glutSwapBuffers();
 }
 
@@ -146,16 +148,28 @@ void processSpecialKeys(int key, int x, int y){
 	Head * h = (Head *) snake.at(0);
 	switch(key){
 		case GLUT_KEY_UP:
-			h->assignDirection(UP);
+			if(lastDir != DOWN){
+				h->assignDirection(UP);
+				lastDir = UP;
+			}
 			break;
 		case GLUT_KEY_RIGHT:
-			h->assignDirection(RIGHT);
+			if(lastDir != LEFT){
+				h->assignDirection(RIGHT);
+				lastDir = RIGHT;
+			}
 			break;
 		case GLUT_KEY_DOWN:
-			h->assignDirection(DOWN);
+			if(lastDir != UP){
+				h->assignDirection(DOWN);
+				lastDir = DOWN;
+			}
 			break;
 		case GLUT_KEY_LEFT:
-			h->assignDirection(LEFT);
+			if(lastDir != RIGHT){
+				h->assignDirection(LEFT);
+				lastDir = LEFT;
+			}
 			break;
 	}
 }
@@ -175,5 +189,11 @@ void randomFoodPos(int &x, int &y){
   srand(time(NULL));
   x = _min + rand() % (_maxX -_min);
   y = _min + rand() % (_maxY -_min);
+}
+
+void timer(int){
+	move();
+	glutPostRedisplay();
+	glutTimerFunc(1000/FPS, timer, 0);
 }
 
