@@ -19,10 +19,12 @@ void drawTile(int x, int y, tColor color, float width);
 tColor createColor(float r, float g, float b);
 void randomFoodPos(int &x, int &y);
 void timer(int);
+void gameOverScreen();
+//extern bool gameOver;
 
 tColor red, green, blue, white, nColor;
 int foodX, foodY;
-bool food = true;
+bool food = true;// gameOver = false;
 Directions lastDir = UP;
 
 void createBasicColors(){
@@ -56,7 +58,7 @@ int main(int argc, char ** argv){
 	//enter glub event processing cycle	
 	glutMainLoop();
 
-	return 1;
+	return 0;
 }
 
 void drawBoard(){
@@ -120,10 +122,13 @@ void drawTile(int x, int y, tColor color, float width){
 void renderScene(){	
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity(); //reset transformations
-	drawBoard();
-	drawSnake();
-	drawFood();
-	
+	if(!bitten){
+		drawBoard();
+		drawSnake();
+		drawFood();
+	}else{
+		gameOverScreen();		
+	}
 	glutSwapBuffers();
 }
 
@@ -140,7 +145,7 @@ void processNormalKeys(unsigned char key, int x, int y){
 		exit(0);
 	}
 	if(key == 109){
-		move();
+		food = move(foodX, foodY);
 	}
 }
 
@@ -192,8 +197,16 @@ void randomFoodPos(int &x, int &y){
 }
 
 void timer(int){
-	move();
+	food = move(foodX, foodY);
 	glutPostRedisplay();
 	glutTimerFunc(1000/FPS, timer, 0);
+}
+
+void gameOverScreen(){
+	std::string s = "Game Over!";
+	glRasterPos3f(8, 17, 1);
+	for(char c : s){
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+	}
 }
 
