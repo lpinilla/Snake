@@ -1,5 +1,5 @@
 # Snake
-Teaching myself C++ by creating an OOP Snake.
+Teaching myself C++ by creating a Snake game.
 
 To run the game:
 
