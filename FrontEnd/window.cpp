@@ -24,7 +24,7 @@ void gameOverScreen();
 
 tColor red, green, blue, white, nColor;
 int foodX, foodY;
-bool food = true;// gameOver = false;
+bool food = true, keyPressed = false;
 Directions lastDir = UP;
 
 void createBasicColors(){
@@ -53,8 +53,7 @@ int main(int argc, char ** argv){
 	
 	//keyboard
 	glutKeyboardFunc(processNormalKeys);
-	glutSpecialFunc(processSpecialKeys);
-
+	glutSpecialFunc(processSpecialKeys);	
 	//enter glub event processing cycle	
 	glutMainLoop();
 
@@ -62,10 +61,6 @@ int main(int argc, char ** argv){
 }
 
 void drawBoard(){
-	/*nColor = createColor(1.0,1.0,0.0);
-	tColor orange = createColor(1.0,0.5,0.0);
-	tColor cyan = createColor(0.0,1.0,1.0);
-	tColor purple = createColor(1.0,0.0,1.0);*/
 	for(int i = 0; i < MAPSIDE ; i++){
 		for(int j = 0; j < MAPSIDE; j++){
 			if(i == 0 || i == MAPSIDE-1 ||
@@ -74,18 +69,6 @@ void drawBoard(){
 			}else{
 				drawTile(i,j, white, 1.0f);
 			}
-			/*if(board[i][j]->dir == UP){
-				drawTile(i,j, nColor, 1.0f);
-			}
-			if(board[i][j]->dir == RIGHT){
-				drawTile(i,j, orange, 1.0f);
-			}
-			if(board[i][j]->dir == DOWN){
-				drawTile(i,j, cyan, 1.0f);
-			}
-			if(board[i][j]->dir == LEFT){
-				drawTile(i,j, purple, 1.0f);
-			}*/
 		}
 	}
 }
@@ -93,9 +76,9 @@ void drawBoard(){
 void drawSnake(){	
 	for(SnakePart * part : snake){
 		drawTile(part->x, part->y, green, 3.0f);
-		std::cout << part->y;
+		std::cout << part->y; //test
 	}
-	std::cout << "end\n";
+	std::cout << "end\n"; //test
 }
 
 void drawFood(){
@@ -150,32 +133,35 @@ void processNormalKeys(unsigned char key, int x, int y){
 }
 
 void processSpecialKeys(int key, int x, int y){
-	Head * h = (Head *) snake.at(0);
-	switch(key){
-		case GLUT_KEY_UP:
-			if(lastDir != DOWN){
-				h->assignDirection(UP);
-				lastDir = UP;
-			}
-			break;
-		case GLUT_KEY_RIGHT:
-			if(lastDir != LEFT){
-				h->assignDirection(RIGHT);
-				lastDir = RIGHT;
-			}
-			break;
-		case GLUT_KEY_DOWN:
-			if(lastDir != UP){
-				h->assignDirection(DOWN);
-				lastDir = DOWN;
-			}
-			break;
-		case GLUT_KEY_LEFT:
-			if(lastDir != RIGHT){
-				h->assignDirection(LEFT);
-				lastDir = LEFT;
-			}
-			break;
+	Head * h = (Head *) snake.at(0);	
+	if(!keyPressed){
+		switch(key){
+			case GLUT_KEY_UP:		
+				if(lastDir != DOWN){
+					h->assignDirection(UP);
+					lastDir = UP;
+				}
+				break;
+			case GLUT_KEY_RIGHT:
+				if(lastDir != LEFT){
+					h->assignDirection(RIGHT);
+					lastDir = RIGHT;
+				}
+				break;
+			case GLUT_KEY_DOWN:
+				if(lastDir != UP){
+					h->assignDirection(DOWN);
+					lastDir = DOWN;
+				}
+				break;
+			case GLUT_KEY_LEFT:			
+				if(lastDir != RIGHT){
+					h->assignDirection(LEFT);
+					lastDir = LEFT;
+				}			
+				break;
+		}
+		keyPressed = true;
 	}
 }
 
@@ -198,6 +184,7 @@ void randomFoodPos(int &x, int &y){
 
 void timer(int){
 	food = move(foodX, foodY);
+	keyPressed = false; //dirty
 	glutPostRedisplay();
 	glutTimerFunc(1000/FPS, timer, 0);
 }
