@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <iostream>
 #include "Map.h"
 #include "Snake.h"
 

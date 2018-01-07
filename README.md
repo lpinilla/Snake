@@ -6,3 +6,6 @@ To run the game:
 -Download the game
 
 -Double click on the "shnek" file or open terminal in the containing folder and run "./shnek"
+
+
+Pause the game with "p" and exit the game with ESC
