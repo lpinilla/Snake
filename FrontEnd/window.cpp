@@ -1,7 +1,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <ctime>
-#include <iostream> //to test
+#include <iostream>
 #include "../Backend/Map.h"
 #include "../Backend/Snake.h"
 
@@ -24,7 +24,7 @@ void gameOverScreen();
 
 tColor red, green, blue, white, nColor;
 int foodX, foodY;
-bool food = true, keyPressed = false;
+bool food = true, keyPressed = false, paused = false;
 Directions lastDir = UP;
 
 void createBasicColors(){
@@ -76,9 +76,7 @@ void drawBoard(){
 void drawSnake(){	
 	for(SnakePart * part : snake){
 		drawTile(part->x, part->y, green, 3.0f);
-		std::cout << part->y; //test
 	}
-	std::cout << "end\n"; //test
 }
 
 void drawFood(){
@@ -129,6 +127,9 @@ void processNormalKeys(unsigned char key, int x, int y){
 	}
 	if(key == 109){
 		food = move(foodX, foodY);
+	}
+	if(key == 112){
+		paused = !paused;
 	}
 }
 
@@ -183,7 +184,9 @@ void randomFoodPos(int &x, int &y){
 }
 
 void timer(int){
-	food = move(foodX, foodY);
+	if(!paused){
+		food = move(foodX, foodY);
+	}
 	keyPressed = false; //dirty
 	glutPostRedisplay();
 	glutTimerFunc(1000/FPS, timer, 0);
